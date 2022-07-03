@@ -85,7 +85,7 @@ def match_id_card(pos,value):
     return{
         "姓名":name,"性别":sex,"民族":minzu,
         "出生日期":born_date,"住址":address,"身份证号":id_number,
-        "正面-签发机关":qianfa,"正面-证件有效期":validate_date
+        "签发机关":qianfa,"证件有效期":validate_date
         }
 
 
