@@ -46,4 +46,4 @@ async def OCR(File: UploadFile = File(...,description=UploadFile_information),ID
     
 
 if __name__=='__main__':
-    uvicorn.run(app="ocr:app",host='114.215.85.130',port=8023,reload=True,debug=True,workers=2)
+    uvicorn.run(app="ocr:app",host='127.0.0.1',port=8023,reload=True,debug=True,workers=2)
