@@ -28,5 +28,7 @@ def get_paper_name(id):
         return "订舱下货纸->(MKL订单)"
     elif id=="14":
         return "过磅单"
+    elif id=="15":
+        return "集装箱"
     else:
         return "ID 不存在！"

@@ -1,4 +1,7 @@
-from receipts_modules import congyezigezheng,daoluyunshu,daoluyunshujingying,dingcangxiahuozhi,guobangdan,haiyuntidan,jianyi,jiashizheng,jinkou,shenfenzheng,tielu,weixianhuowu,xingshizheng,yingyezhizhao
+import re
+
+from anyio import current_time
+from receipts_modules import congyezigezheng,daoluyunshu,daoluyunshujingying,dingcangxiahuozhi,guobangdan,haiyuntidan,jianyi,jiashizheng,jinkou,shenfenzheng,tielu,weixianhuowu,xingshizheng,yingyezhizhao,jizhuangxiang
 
 def match_jinkou(pos,value):
     bianhao=jinkou.match_bianhao(pos, value)
@@ -262,4 +265,15 @@ def match_guobangdan(pos,value):
         "物料名称":wuliao,"车号":chehao,
         "进厂重量":jinchangzhongliang,"出厂重量":chuchangzhongling,
         "净重":jingzhong
+    }
+
+def match_jizhuangxiang(pos,value):
+    xianghao=jizhuangxiang.match_xianghao(pos,value)
+    max=jizhuangxiang.match_MAXGROSS(pos,value)
+    tare=jizhuangxiang.match_TARE(pos,value)
+    net=jizhuangxiang.match_NET(pos,value)
+
+    return {
+        "箱号":xianghao,
+        "MAX GROSS":max,"TARE":tare,"NET":net
     }

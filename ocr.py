@@ -38,9 +38,6 @@ async def OCR(File: UploadFile = File(...,description=UploadFile_information),ID
         elif extension==".pdf":
             pdf_img_list,page = save_file(File)
             pos_all,value_all=detect_pdf(img_list=pdf_img_list,page_no=page)
-            print(value_all)
-            print(len(value_all))
-            print(len(pos_all))
             result=detect_paper(ID,pos_all,value_all)
             return result
     else:
