@@ -1,6 +1,6 @@
 import uvicorn
 from typing import Optional
-from utils import *
+from component_modules.utils import *
 
 from fastapi import FastAPI,File,UploadFile,Query,applications
 from fastapi.openapi.docs import get_swagger_ui_html
@@ -31,7 +31,7 @@ async def OCR(File: UploadFile = File(...,description=UploadFile_information),ID
         # 检测到是图片类型的
         if extension in imgType_list:
             temp_file = save_file(File)
-            pos,value=await detect_img(temp_file)
+            pos,value= detect_img(temp_file)
             result=detect_paper(ID,pos,value)
             return result
 

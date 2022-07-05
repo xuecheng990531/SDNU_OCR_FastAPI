@@ -1,4 +1,4 @@
-from detect import daoluyunshujingying, jinkou,jianyi,shenfenzheng,weixianhuowu,xingshizheng,jiashizheng,tielu,yingyezhizhao,haiyuntidan,congyezigezheng,daoluyunshu,dingcangxiahuozhi
+from receipts_modules import congyezigezheng,daoluyunshu,daoluyunshujingying,dingcangxiahuozhi,guobangdan,haiyuntidan,jianyi,jiashizheng,jinkou,shenfenzheng,tielu,weixianhuowu,xingshizheng,yingyezhizhao
 
 def match_jinkou(pos,value):
     bianhao=jinkou.match_bianhao(pos, value)
@@ -170,9 +170,6 @@ def match_daoluyunshujingyingzigezheg(pos,value):
         "经营范围":jingyingfanwei,"有效期":youxiaoqi,"value":value
     }
 
-def match_haiyuntidan(pos,value):
-    return {"消息":"我没做"}
-
 def match_yingyezhizhao(pos,value):
     mingcheng=yingyezhizhao.match_mingcheng(pos,value)
     daima=yingyezhizhao.match_daima(pos,value)
@@ -243,4 +240,26 @@ def match_xiahuozhi(pos,value):
         "航名":hangming,"航次":hangci,"提单号":tidanhao,"箱型":xiangxing,"重量":zhongliang,"超重箱":chaozhongxiang,
         "目的港":mudigang,"中转港":zhongzhuan,"货名":huoming,"件数":jianshu,"尺寸":chicun,"温度":wendu,"湿度":shidu,
         "危险等级":weixiandengji,"副危险等级":weixianfudengji,"违规号":weiguihao,"特殊需求":xuqiu
+    }
+
+def match_haiyun(pos,value):
+    tidanhao=haiyuntidan.match_tidanhao(pos,value)
+    dingcanghao=haiyuntidan.match_dingcanghao(pos,value)
+
+    return {
+        "提单号":tidanhao,"订舱号":dingcanghao
+    }
+
+def match_guobangdan(pos,value):
+    fahuodanwei=guobangdan.match_fahuodanwei(pos,value)
+    shouhuodanwei=guobangdan.match_shouhuodanwei(pos,value)
+    wuliao=guobangdan.match_wuliao(pos,value)
+    chehao=guobangdan.match_chehao(pos,value)
+    jinchangzhongliang,chuchangzhongling,jingzhong,_=guobangdan.match_weight_all(pos,value)
+
+    return {
+        "发货单位":fahuodanwei,"收货单位":shouhuodanwei,
+        "物料名称":wuliao,"车号":chehao,
+        "进厂重量":jinchangzhongliang,"出厂重量":chuchangzhongling,
+        "净重":jingzhong
     }

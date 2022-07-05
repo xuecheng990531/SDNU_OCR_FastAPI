@@ -1,10 +1,11 @@
 import re
 from tempfile import TemporaryDirectory
 import turtle
+from fastapi import FastAPI
 from paddleocr import PaddleOCR
 from PIL import Image
-from detect.paper_id_2_name import *
-from detect.all_in_one import *
+from component_modules.paper_id_2_name import *
+from component_modules.all_in_one import *
 import cv2
 import os
 import shutil
@@ -46,9 +47,9 @@ def detect_pdf(img_list,page_no):
 
 
 #-------------------------------------------------information-----------------------------------
-describe_API='更新时间：2022年7月4日  \n   \n 更新内容：MKL订舱下货纸  \n   \n 可检测的单据内容：危险货物安全适运说明书，入境货物检验检疫证明，进口报关单，身份证，行驶证，驾驶证，从业资格证，道路运输证，道路运输经营资格证，营业执照，订舱下货纸，铁路单据。'
+describe_API='更新时间：2022年7月5日  \n   \n 更新内容：过磅单（特定公司）  \n   \n 可检测的单据内容：危险货物安全适运说明书，入境货物检验检疫证明，进口报关单，身份证，行驶证，驾驶证，从业资格证，道路运输证，道路运输经营资格证，营业执照，订舱下货纸，铁路单据，过磅单。'
 UploadFile_information='该处上传PDF或者图片,格式为:  \n jpg,bmp,png,jpeg,jfif。  \n   \n 为了尽可能提高检测的准确率，应确保：  \n 1.上传的图片需要摆正，不能存在未经过旋转的图片。  \n 2.上传的PDF不应该超过一页，上传的身份证等证件正反面都需要放在一个照片之内。  \n 3.上传单据的同时需要确定其ID值'
-ID_information='每个ID都唯一代表对应的单据，每个ID对应的单据如下：  \n ID=1------->危险货物安全适运说明书  \n ID=2------->入境货物检验检疫证明  \n ID=3------->进口报关单  \n ID=4------->身份证  \n ID=5------->行驶证  \n ID=6------->驾驶证  \n ID=7------->铁路货运单  \n ID=8------->海运提单（未完成）  \n ID=9------->道路运输经营许可证  \n ID=10------->营业执照  \n ID=11------->从业资格证  \n ID=12------->道路运输证  \n ID=13------->订舱下货纸'
+ID_information='每个ID都唯一代表对应的单据，每个ID对应的单据如下：  \n ID=1------->危险货物安全适运说明书  \n ID=2------->入境货物检验检疫证明  \n ID=3------->进口报关单  \n ID=4------->身份证  \n ID=5------->行驶证  \n ID=6------->驾驶证  \n ID=7------->铁路货运单  \n ID=8------->海运提单  \n ID=9------->道路运输经营许可证  \n ID=10------->营业执照  \n ID=11------->从业资格证  \n ID=12------->道路运输证  \n ID=13------->订舱下货纸  \n ID=14------->过磅单（特定公司）'
 #-------------------------------------------------information-----------------------------------
 
 
@@ -120,7 +121,6 @@ def save_file(uploaded_file, path="save_files"):
 
 #-------------------------------------------------which paper-------------------------------------
 def detect_paper(ID,pos,value):
-
     if ID=="1":
         result=match_weixian(pos,value)
         return {"上传类型":get_paper_name(ID),"信息":"返回成功","检测日期":current_time,"检测结果":result}
@@ -143,7 +143,7 @@ def detect_paper(ID,pos,value):
         result=match_tielu(pos,value)
         return {"上传类型":get_paper_name(ID),"信息":"返回成功","检测日期":current_time,"检测结果":result}
     elif ID=="8":
-        result=match_haiyuntidan(pos,value)
+        result=match_haiyun(pos,value)
         return {"上传类型":get_paper_name(ID),"信息":"返回成功","检测日期":current_time,"检测结果":result}
     elif ID=="9":
         result=match_daoluyunshujingyingzigezheg(pos,value)
@@ -160,7 +160,9 @@ def detect_paper(ID,pos,value):
     elif ID=="13":
         result=match_xiahuozhi(pos,value)
         return {"上传类型":get_paper_name(ID),"信息":"返回成功","检测日期":current_time,"检测结果":result}
+    elif ID=="14":
+        result=match_guobangdan(pos,value)
+        return {"上传类型":get_paper_name(ID),"信息":"返回成功","检测日期":current_time,"检测结果":result,"value":value}
     else:
-
         return {"上传类型":get_paper_name(ID),"信息":"返回成功","检测日期":current_time,"检测结果":value} 
 #-------------------------------------------------which paper-------------------------------------
