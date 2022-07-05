@@ -1,4 +1,4 @@
-from detect import daoluyunshujingying, jinkou,jianyi,shenfenzheng,weixianhuowu,xingshizheng,jiashizheng,tielu,yingyezhizhao,haiyuntidan,congyezigezheng,daoluyunshu
+from detect import daoluyunshujingying, jinkou,jianyi,shenfenzheng,weixianhuowu,xingshizheng,jiashizheng,tielu,yingyezhizhao,haiyuntidan,congyezigezheng,daoluyunshu,dingcangxiahuozhi
 
 def match_jinkou(pos,value):
     bianhao=jinkou.match_bianhao(pos, value)
@@ -218,4 +218,29 @@ def match_daoluyunshu(pos,value):
         "运输证号":yunshuzhenghao,"业户名称":yehumingcheng,"地址":dizhi,"车牌号码":chepaihaoma,
         "经营许可证号":jingyingxukezhenghao,"经营类型":jingyingleixing,"车辆类型":cheliangleixing,
         "吨位":dunwei,"尺寸":chicun
+    }
+
+def match_xiahuozhi(pos,value):
+    hangming=dingcangxiahuozhi.match_hangming(pos,value)
+    hangci=dingcangxiahuozhi.match_hangci(pos,value)
+    tidanhao=dingcangxiahuozhi.match_tidanhao(pos,value)
+    xiangxing=dingcangxiahuozhi.match_xiangxing(pos,value)
+    zhongliang=dingcangxiahuozhi.match_zhongliang(pos,value)
+    chaozhongxiang=dingcangxiahuozhi.match_chaozhongxiang(pos,value)
+    mudigang=dingcangxiahuozhi.match_mudigang(pos,value)
+    zhongzhuan=dingcangxiahuozhi.match_zhongzhuangang(pos,value)
+    huoming=dingcangxiahuozhi.match_huoming(pos,value)
+    jianshu=dingcangxiahuozhi.match_jianshu(pos,value)
+    chicun=dingcangxiahuozhi.match_chicun(pos,value)
+    wendu=dingcangxiahuozhi.match_wendu(pos,value)
+    shidu=dingcangxiahuozhi.match_shidu(pos,value)
+    weixiandengji=dingcangxiahuozhi.match_weixiandengji(pos,value)
+    weixianfudengji=dingcangxiahuozhi.match_weixianfudengji(pos,value)
+    weiguihao=dingcangxiahuozhi.match_weiguihao(pos,value)
+    xuqiu=dingcangxiahuozhi.match_xuqiu(pos,value)
+
+    return {
+        "航名":hangming,"航次":hangci,"提单号":tidanhao,"箱型":xiangxing,"重量":zhongliang,"超重箱":chaozhongxiang,
+        "目的港":mudigang,"中转港":zhongzhuan,"货名":huoming,"件数":jianshu,"尺寸":chicun,"温度":wendu,"湿度":shidu,
+        "危险等级":weixiandengji,"副危险等级":weixianfudengji,"违规号":weiguihao,"特殊需求":xuqiu
     }

@@ -22,5 +22,9 @@ def get_paper_name(id):
         return "营业执照"
     elif id=="11":
         return "从业资格证"
+    elif id=="12":
+        return "道路运输证"
+    elif id=="13":
+        return "订舱下货纸->(MKL订单)"
     else:
         return "ID 不存在！"
