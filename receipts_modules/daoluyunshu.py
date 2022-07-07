@@ -86,7 +86,7 @@ def match_jingyingxukezheng(pos,value):
             
 def match_jingyingleixing(pos,value):
     for i in range(len(pos)):
-        if '有限责任' in value[i]:
+        if '有限' in value[i] and '公司' in value[i]:
             print(value[i])
             return value[i]
         elif '无限公司' in value[i]:

@@ -1,7 +1,8 @@
-from pickletools import read_uint1
+
+from idna import valid_contextj
 from paddleocr import PaddleOCR
 from LAC import LAC
-from pydantic import validate_arguments
+
 
 lac=LAC(mode='lac')
 
@@ -19,20 +20,11 @@ def OCR(img_path):
 
 def match_mingcheng(pos,value):
     for i in range(len(pos)):
-        # [[464.0, 947.0], [973.0, 947.0], [973.0, 981.0], [464.0, 981.0]]
-        # if 400<pos[i][1][0]-pos[i][0][0]<600 and 6<pos[i][2][1]-pos[i][0][1]< 50 and 380 < pos[i][0][0]< 580 and 880 < pos[i][0][1] < 1000:
-        #     print(value[i])
-        #     return value[i]
-        # elif '称' in value[i]:
-        #     if len(value[i])>2:
-        #         print(value[i].split('称')[1])
-        #         return value[i].split('称')[1]
-        #     else:
-        #         print(value[i+1])
-        #         return value[i+1]
-        if '公司' or '有限公司' in value[i]:
-            print(value[i])
-            return value[i]
+        if '称' in value[i]:
+            if len(value[i])>5:
+                return value[i].split('称')[1]
+            elif '公司' in value[i+1]:
+                return value[i+1]
 
 def match_daima(pos,value):
     for i in range(len(pos)):
@@ -47,19 +39,14 @@ def match_daima(pos,value):
 def match_leixing(pos,value):
     for i in range(len(pos)):
         if '有限责任' in value[i]:
-            print(value[i])
             return value[i]
         elif '股份有限责任' in value[i]:
-            print(value[i])
             return value[i]
         elif '个人' in value[i]:
-            print(value[i])
             return value[i]
         elif '合伙' in value[i]:
-            print(value[i])
             return value[i]
         elif '个体工商户' in value[i]:
-            print(value[i])
             return value[i]
 
 def match_daibiaoren(pos,value):
@@ -112,14 +99,16 @@ def match_yingyeqixian(pos,value):
             return value[i+1]
 
 def match_jingyingfanwei(pos,value):
+    jingyingfanwei=[]
+    global num
     for i in range(len(pos)):
-        if '经营范围' in value[i]:
-            if value[i].split('围')[1]!="":
-                print(value[i].split('围')[1])
-                return value[i].split('围')[1]
-            else:
-                print(value[i+1])
-                return value[i+1]
+        if '范' in value[i] or '经营' in value[i]:
+            num=i#18
+            for index in range(len(pos)-num):
+                jingyingfanwei.append(value[index+num])
+
+    s=''.join(jingyingfanwei)
+    return s
 
 if __name__=='__main__':
 

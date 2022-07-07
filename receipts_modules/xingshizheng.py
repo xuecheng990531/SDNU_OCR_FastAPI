@@ -93,29 +93,43 @@ def match_cheliangleixing(pos,value):
             return value[i]
         
 def match_suoyouren(pos,value):
-    user_name_list = []
     for i in range(len(pos)):
+        user_name_list = []
         lac_result = lac.run(value[i])
         for index, lac_label in enumerate(lac_result[1]):
             if lac_label == "PER":
                 user_name_list.append(lac_result[0][index])
-    print(user_name_list[0])
-    return user_name_list[0]
-            
+        if len(user_name_list)==0:
+            result=match_ren(pos,value)
+            return result
+        else:
+            return user_name_list[0]
+
+def match_ren(pos,value):
+    for i in range(len(pos)):
+        if '所有' in value[i] and len(value[i])>4 and '人' in value[i]:
+            return value[i].split('人')[1]
+
+
 def match_address(pos,value):
     for i in range(len(pos)):
         if '省' and '市' in value[i]:
             #print(value[i])
             return value[i]
 
+
 def match_shiyongxingzhi(pos,value):
     for i in range(len(pos)):
         if '营运' in value[i]:
-            print("营运")
             return "营运"
-        else:
-            print("非营运")
-            return "非营运"
+        elif '租赁' in value[i]:
+            return "租赁"
+        elif '使用性质' in value[i]:
+            if value[i].split('质')[1]!="":
+                return value[i].split('质')[1]
+            else:
+                print("非营运")
+                return "非营运"
 
 def match_pinpaixinghao(pos,value):
     for i in range(len(pos)):
@@ -150,7 +164,6 @@ def match_cheliangshibiedaihao(pos,value):
             Num2 = num10 * 9 + num11 * 8 + num12 * 7 + num13 * 6 + num14 * 5 + num15 * 4 + num16 * 3 + num17 * 2#后8位的和
             Nums = Num1 + Num2
             if Nums % 11 == int(text1[8]):
-                print("VIN正确：",text1)
                 return text1
     
 
@@ -170,49 +183,38 @@ def match_zhucedate(pos,value):
 
 def match_zairenshu(pos,value):
     for i in range(len(value)):
-        if '人' in value[i]:
-            print(value[i])
-
-            return value[i]
+        if '核定' in value[i] and '人' in value[i] and '数' in value[i]:
+            if len(value[i].split('数')[1])>1:
+                return value[i].split('数')[1]
+            else:
+                return value[i]
 
 def match_weight_sum(pos,value):
+    weight=[]
     for i in range(len(value)):
-        if '总质量' in value[i]:
-            if len(value[i])>3:
-                print(value[i].split('量')[1])
-                return value[i][3:]
-                
-            else:
-                print(value[i+1])
-                return value[i+1]
+        if 'kg' in value[i]:
+            weight.append(value[i])
+    return weight[0]
+    
                 
 
 def match_weight_zhengbei(pos,value):
     for i in range(len(value)):
-        if '整' in value[i]:
-            if len(value[i])>4 and value[i][3:4].isdigit():
-                return value[i][3:]
-            elif value[i-1][:3].isdigit():
-                print(value[i-1])
-                return value[i-1]
-            else:
-                print(value[i+1])
+        if '整' in value[i] and '备' in value[i]:
+            if value[i].split('量')[1]!="":
+                return value[i].split('量')[1]
+            elif value[i+1][:2].isdigit() and 'kg' in value[i]:
                 return value[i+1]
+            elif value[i-1][:2].isdigit() and 'kg' in value[i]:
+                return value[i-1]
 
 def match_weight_heding(pos,value):
     for i in range(len(value)):
         if '核定载质量' in value[i]:
-            if len(value[i])>5:
-                print(value[i].split('量')[1])
-                return value[i][5:]
-            elif value[i+1][:2].isdigit():
-                print(value[i+1])
+            if value[i].split('量')[1]!="":
+                return value[i].split('量')[1]
+            elif value[i+1][:2].isdigit() and 'kg' in value[i]:
                 return value[i+1]
-            elif value[i-1][:2].isdigit():
-                print(value[i-1])
-                return value[i-1]
-            else:
-                return -1
 
 def match_chicun(pos,value):
     for i in range(len(value)):

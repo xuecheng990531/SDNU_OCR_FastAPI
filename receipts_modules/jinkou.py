@@ -1,10 +1,4 @@
 
-import sys, fitz
-import os
-import datetime
-import cv2
-import time
-import paddle
 
 from paddleocr import PPStructure,draw_structure_result,save_structure_res,PaddleOCR, draw_ocr
 from typing import Optional

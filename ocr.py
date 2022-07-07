@@ -22,7 +22,7 @@ app=FastAPI(
 
 
 # OCR识别
-@app.post("/ocr",summary='OCR识别接口',description="通过算法检测单据的每一个字符，按照需求说明书的要求识别特定单据的特定值，并通过API返回结果。")
+@app.post("/ocr",summary='OCR识别接口',description="算法检测每个单据的所有字符，根据需求说明书要求识别出特定字段对应的特定值，通过API返回结果。")
 async def OCR(File: UploadFile = File(...,description=UploadFile_information),ID: Optional[str]=Query(...,description=ID_information)):
     extension = os.path.splitext(File.filename)[-1]
 
@@ -45,4 +45,4 @@ async def OCR(File: UploadFile = File(...,description=UploadFile_information),ID
     
 
 if __name__=='__main__':
-    uvicorn.run(app="ocr:app",host='127.0.0.1',port=8023,reload=True,debug=True,workers=2)
+    uvicorn.run(app="ocr:app",host='127.0.0.1',port=8023,reload=False,debug=False,workers=2)

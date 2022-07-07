@@ -1,6 +1,6 @@
-import re
 
-from anyio import current_time
+from anyio import TypedAttributeLookupError
+from scipy.fftpack import tilbert
 from receipts_modules import congyezigezheng,daoluyunshu,daoluyunshujingying,dingcangxiahuozhi,guobangdan,haiyuntidan,jianyi,jiashizheng,jinkou,shenfenzheng,tielu,weixianhuowu,xingshizheng,yingyezhizhao,jizhuangxiang
 
 def match_jinkou(pos,value):
@@ -102,7 +102,7 @@ def match_xingshizheng(pos,value):
     cheliangshibiedaihao=xingshizheng.match_cheliangshibiedaihao(pos,value)
     fadongjihao=xingshizheng.match_fadongjihaoma(pos,value)
     zhuceriqi=xingshizheng.match_zhucedate(pos,value)
-    hedingzairenshu=xingshizheng.match_weight_heding(pos,value)
+    zairenshu=xingshizheng.match_zairenshu(pos,value)
     zongzhiliang=xingshizheng.match_weight_sum(pos,value)
     zhengbeizhiliang=xingshizheng.match_weight_zhengbei(pos,value)
     hedingzaizhiliang=xingshizheng.match_weight_heding(pos,value)
@@ -113,7 +113,7 @@ def match_xingshizheng(pos,value):
         "车牌号码":chepaihaoma,"车辆类型":cheliangleixing,
         "所有人":suoyouren,"住址":zhuzhi,"使用性质":shiyongxingzhi,
         "品牌型号":pinpaixinghao,"车辆识别代号":cheliangshibiedaihao,
-        "发动机号":fadongjihao,"注册日期":zhuceriqi,"核定载人数":hedingzairenshu,
+        "发动机号":fadongjihao,"注册日期":zhuceriqi,"核定载人数":zairenshu,
         "总质量":zongzhiliang,"整备质量":zhengbeizhiliang,"核定载质量":hedingzaizhiliang,
         "外廓尺寸":chicun,"有效期":youxiaoqi
         }
@@ -136,10 +136,6 @@ def match_tielu(pos,value):
     fazhan=tielu.match_fazhan(pos,value)
     mingcheng=tielu.match_mingcheng(pos,value)
     daozhan=tielu.match_daozhan(pos,value)
-    tuoyun_jingbanren=tielu.match_tuoyun_jingbanren(pos,value)
-    tuioyun_shoujihaoma=tielu.match_tuoyun_shoujihaoma(pos,value)
-    shouhuo_jingbanren=tielu.match_shouhuo_jiangbanren(pos,value)
-    shouhuo_dianhuahaoma=tielu.match_shouhuo_dianhuahaoma(pos,value)
     huowumingcheng=tielu.match_huowumingcheng(pos,value)
     jianshu=tielu.match_jianshu(pos,value)
     zhongliang=tielu.match_zhongliang(pos,value)
@@ -150,14 +146,17 @@ def match_tielu(pos,value):
     feiyongheji=tielu.match_feiyongheji(pos,value)
     shuie=tielu.match_shuie(pos,value)
     jine=tielu.match_jine(pos,value)
+    rnming=tielu.match_renming(pos,value)
+    tuoyunshoujihaoma=tielu.match_phone_tuoyun(pos,value)
+    shouhuoshoujihaoma=tielu.match_phone_shouhuo(pos,value)
 
     return {
         "需求号":xuqiuhao,"发站":fazhan,"名称":mingcheng,
-        "托运经办人":tuoyun_jingbanren,"托运经办人联系电话":tuioyun_shoujihaoma,
-        "到站":daozhan,"到站经办人":shouhuo_jingbanren,"到站经办人联系电话":shouhuo_dianhuahaoma,
+        "托运经办人":rnming[0],"托运经办人联系电话":tuoyunshoujihaoma,
+        "到站":daozhan,"到站经办人":rnming[1],"到站经办人联系电话":shouhuoshoujihaoma,
         "货物名称":huowumingcheng,"件数":jianshu,"重量":zhongliang,"厢号":xianghao,
         "集装箱施封号":shifenghao,"确定重量":quedingzhongliang,"费目":feimu,"金额":jine,
-        "税额":shuie,"费用合计":feiyongheji,"value":value
+        "税额":shuie,"费用合计":feiyongheji
     }
 
 def match_daoluyunshujingyingzigezheg(pos,value):
@@ -170,7 +169,7 @@ def match_daoluyunshujingyingzigezheg(pos,value):
 
     return {
         '号码':haoma,"业户名称":yehu,"地址":dizhi,"经济性质":jingjixingzhi,
-        "经营范围":jingyingfanwei,"有效期":youxiaoqi,"value":value
+        "经营范围":jingyingfanwei,"有效期":youxiaoqi
     }
 
 def match_yingyezhizhao(pos,value):
@@ -181,11 +180,11 @@ def match_yingyezhizhao(pos,value):
     zhucechengben=yingyezhizhao.match_zhucechengben(pos,value)
     chengliriqi=yingyezhizhao.match_chengliriqi(pos,value)
     yingyeqixian=yingyezhizhao.match_yingyeqixian(pos,value)
-    jingyingfanwei=daoluyunshujingying.match_jingyingfanwei(pos,value)
+    jingyingfanwei=yingyezhizhao.match_jingyingfanwei(pos,value)
 
     return {
         "名称":mingcheng,"代码":daima,"类型":leixing,"代表人":daibiaoren,"注册成本":zhucechengben,
-        "成立日期":chengliriqi,"营业期限":yingyeqixian,"经营范围":jingyingfanwei,"value":value
+        "成立日期":chengliriqi,"营业期限":yingyeqixian,"经营范围":jingyingfanwei
     }
 
 def match_congyezigezheng(pos,value):
@@ -199,7 +198,7 @@ def match_congyezigezheng(pos,value):
 
     return {
         "姓名":xingming,"性别":xingbie,"身份证号":shenfenzhenghao,
-        "档案号":danganhao,"从业类别":congyeleibie,"有效期":youxiaoqi,"value":value
+        "档案号":danganhao,"从业类别":congyeleibie,"有效期":youxiaoqi
     }
 
 def match_daoluyunshu(pos,value):
@@ -258,13 +257,15 @@ def match_guobangdan(pos,value):
     shouhuodanwei=guobangdan.match_shouhuodanwei(pos,value)
     wuliao=guobangdan.match_wuliao(pos,value)
     chehao=guobangdan.match_chehao(pos,value)
-    jinchangzhongliang,chuchangzhongling,jingzhong,_=guobangdan.match_weight_all(pos,value)
+    jinchang_weight=guobangdan.match_jinchangzhongliang(pos,value)
+    chuchang_weight=guobangdan.match_chuchangzhongliang(pos,value)
+    jing_weight=guobangdan.match_jingzhong(pos,value)
 
     return {
         "发货单位":fahuodanwei,"收货单位":shouhuodanwei,
         "物料名称":wuliao,"车号":chehao,
-        "进厂重量":jinchangzhongliang,"出厂重量":chuchangzhongling,
-        "净重":jingzhong
+        "进厂重量":jinchang_weight,"出厂重量":chuchang_weight,
+        "净重":jing_weight
     }
 
 def match_jizhuangxiang(pos,value):

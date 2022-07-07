@@ -1,7 +1,4 @@
-from curses.ascii import isdigit
-from random import random
-import re
-from typing import ValuesView
+
 from paddleocr import PaddleOCR
 from LAC import LAC
 lac = LAC(mode="lac")
@@ -48,7 +45,7 @@ def match_sex(pos,value):
     if ("男" in value):
         # print("nan")
         return "男"
-    else:
+    elif '女' in value:
         # print("nv")
         return "女"
 
@@ -64,6 +61,8 @@ def match_chexing(pos,value):
         if value[i] in zhunjia:
             print(value[i])
             return value[i]
+        elif 'Cl' in value[i]:
+            return 'C1'
 
 
 def match_valid_date(pos,value):

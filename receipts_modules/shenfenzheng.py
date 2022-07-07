@@ -1,12 +1,6 @@
 import re
-from this import s
 from LAC import LAC
-from cv2 import add
-from idna import valid_contextj
-from imageio import RETURN_BYTES
-from matplotlib import use
 from paddleocr import PaddleOCR
-from pydantic import validate_arguments
 
 lac = LAC(mode="lac")
 shenfenzheng=r'^([1-9]\d{5}[12]\d{3}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])\d{3}[0-9xX])$'
@@ -51,6 +45,7 @@ def match_address(pos,value):
                 return value[i]+value[i+1]
             else:
                 return value[i]
+
         
 def match_name(pos,value):
     user_name_list = []
