@@ -1,19 +1,12 @@
+from pydoc import importfile
 
-from paddleocr import PaddleOCR
+
+import multiprocessing
+pool=multiprocessing.Pool(processes=4)
 from LAC import LAC
 lac = LAC(mode="lac")
 
 zhunjia=['A1','A2','A3','B1','B2','C1','C2','C3','C4','D','E','F','M','N','P']
-
-def OCR(img_path):
-    ocr = PaddleOCR(use_angle_cls=False, lang="ch")  # need to run only once to download and load model into memory
-    result = ocr.ocr(img_path, cls=False)
-    pos=[]
-    value=[]
-    for i in range(len(result)):
-        pos.append(result[i][0])
-        value.append(result[i][1][0])
-    return pos,value
 
 def match_name(pos,value):
     user_name_lis = []
@@ -42,12 +35,11 @@ def match_jiashizhenghao(pos,value):
                 return value[i-1]
             
 def match_sex(pos,value):
-    if ("男" in value):
-        # print("nan")
-        return "男"
-    elif '女' in value:
-        # print("nv")
-        return "女"
+    for i in range(len(pos)):
+        if '男' in value[i]:
+            return '男'
+        else:
+            return '女'
 
 
 def match_address(pos,value):
@@ -66,19 +58,6 @@ def match_chexing(pos,value):
 
 
 def match_valid_date(pos,value):
-    for i in range(len(value)):
-        if '至' in value[i]:
-            print(value[i])
-            return value[i]
-
-
-if __name__=='__main__':
-    dict=OCR('samples/jiashizheng/21655527733_.pic.jpg')
-    pos=dict[0]
-    value=dict[1]
-    print(value)
-    match_name(pos,value)
-    match_jiashizhenghao(pos,value)
-    match_sex(pos,value)
-    match_address(pos,value)
-    match_valid_date(pos,value)
+    for i in range(len(pos)):
+        if '至' in value[i] and value[i].split('至')[1]!="":
+            return value[i].split('至')[1]

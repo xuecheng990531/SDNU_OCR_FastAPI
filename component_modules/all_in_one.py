@@ -1,6 +1,5 @@
 
-from anyio import TypedAttributeLookupError
-from scipy.fftpack import tilbert
+import multiprocessing
 from receipts_modules import congyezigezheng,daoluyunshu,daoluyunshujingying,dingcangxiahuozhi,guobangdan,haiyuntidan,jianyi,jiashizheng,jinkou,shenfenzheng,tielu,weixianhuowu,xingshizheng,yingyezhizhao,jizhuangxiang
 
 def match_jinkou(pos,value):
@@ -126,6 +125,7 @@ def match_jiashizheng(pos,value):
     zhenghao=jiashizheng.match_jiashizhenghao(pos,value)
     youxiaoqi=jiashizheng.match_valid_date(pos,value)
 
+
     return {
         "姓名":name,"性别":sex,"住址":address,
         "准驾车型":chexing,"证号":zhenghao,"有效期":youxiaoqi
@@ -220,8 +220,8 @@ def match_daoluyunshu(pos,value):
     }
 
 def match_xiahuozhi(pos,value):
-    hangming=dingcangxiahuozhi.match_hangming(pos,value)
-    hangci=dingcangxiahuozhi.match_hangci(pos,value)
+    hangming,hangci=dingcangxiahuozhi.match_hangming(pos,value)
+    # hangci=dingcangxiahuozhi.match_hangci(pos,value)
     tidanhao=dingcangxiahuozhi.match_tidanhao(pos,value)
     xiangxing=dingcangxiahuozhi.match_xiangxing(pos,value)
     zhongliang=dingcangxiahuozhi.match_zhongliang(pos,value)

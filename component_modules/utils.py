@@ -1,7 +1,3 @@
-import re
-from tempfile import TemporaryDirectory
-import turtle
-from fastapi import FastAPI
 from paddleocr import PaddleOCR
 from PIL import Image
 from component_modules.paper_id_2_name import *
@@ -15,14 +11,14 @@ import fitz
 
 
 #实例化paddleocr
-ocr = PaddleOCR(use_angle_cls=True, lang="ch",workers=8)
+ocr = PaddleOCR(use_angle_cls=False, lang="ch",workers=4)
 # 当前日期时间
 current_time=time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
 
 
 #-------------------------------------------------detect_pic-----------------------------------
 def detect_img(img_path):
-    result =ocr.ocr(img_path, cls=True)
+    result = ocr.ocr(img_path, cls=False)
     pos=[]
     value=[]
     for i in range(len(result)):
@@ -34,7 +30,6 @@ def detect_img(img_path):
 
 #-------------------------------------------------detect_pdf-----------------------------------
 def detect_pdf(img_list,page_no):
-    print('ahsgdjagsjkdgilquwyeqowieuio',img_list)
     value_all=[]
     pos_all=[]
     for index in range(page_no):
@@ -70,9 +65,7 @@ def PDF_Concate(imgs, direction="vertical", gap=0):
     else:
         raise ValueError("The direction parameter has only two options: horizontal and vertical")
     return np.array(result)
-#-------------------------------------------------PDF Compose-------------------------------------
 
-#-------------------------------------------------PDF Compose-------------------------------------
 def pyMuPDF_fitz(pdfPath, imagePath,img_name):    
     pdfDoc = fitz.open(pdfPath)
     for pg in range(pdfDoc.pageCount):
@@ -123,49 +116,77 @@ def save_file(uploaded_file, path="save_files"):
 def detect_paper(ID,pos,value):
     if ID=="1":
         result=match_weixian(pos,value)
-        return {"上传类型":get_paper_name(ID),"信息":"返回成功","检测日期":current_time,"检测结果":result,"所有检测结果":''.join(value)}
+        return {"上传类型":get_paper_name(ID),"检测日期":current_time,"检测结果":result,"所有检测结果":value}
     elif ID=="2":
+        
         result=match_jianyi(pos,value)
-        return {"上传类型":get_paper_name(ID),"信息":"返回成功","检测日期":current_time,"检测结果":result,"所有检测结果":''.join(value)}
+        
+        return {"上传类型":get_paper_name(ID),"检测日期":current_time,"检测结果":result,"所有检测结果":value}
     elif ID=="3":
+        
         result=match_jinkou(pos, value)
-        return {"上传类型":get_paper_name(ID),"信息":"返回成功","检测日期":current_time,"检测结果":result,"所有检测结果":''.join(value)}
+        
+        return {"上传类型":get_paper_name(ID),"检测日期":current_time,"检测结果":result,"所有检测结果":value}
     elif ID=="4":
+        
         result=match_id_card(pos,value)
-        return {"上传类型":get_paper_name(ID),"信息":"返回成功","检测日期":current_time,"检测结果":result,"所有检测结果":''.join(value)}
+        
+        return {"上传类型":get_paper_name(ID),"检测日期":current_time,"检测结果":result,"所有检测结果":value}
     elif ID=="5":
+        
         result=match_xingshizheng(pos,value)
-        return {"上传类型":get_paper_name(ID),"信息":"返回成功","检测日期":current_time,"检测结果":result,"所有检测结果":''.join(value)}    
+        
+        return {"上传类型":get_paper_name(ID),"检测日期":current_time,"检测结果":result,"所有检测结果":value}    
     elif ID=="6":
+        
         result=match_jiashizheng(pos,value)
-        return {"上传类型":get_paper_name(ID),"信息":"返回成功","检测日期":current_time,"检测结果":result,"所有检测结果":''.join(value)}
+        
+        return {"上传类型":get_paper_name(ID),"检测日期":current_time,"检测结果":result,"所有检测结果":value}
     elif ID=="7":
+        
         result=match_tielu(pos,value)
-        return {"上传类型":get_paper_name(ID),"信息":"返回成功","检测日期":current_time,"检测结果":result,"所有检测结果":''.join(value)}
+        
+        return {"上传类型":get_paper_name(ID),"检测日期":current_time,"检测结果":result,"所有检测结果":value}
     elif ID=="8":
+        
         result=match_haiyun(pos,value)
-        return {"上传类型":get_paper_name(ID),"信息":"返回成功","检测日期":current_time,"检测结果":result,"所有检测结果":''.join(value)}
+        
+        return {"上传类型":get_paper_name(ID),"检测日期":current_time,"检测结果":result,"所有检测结果":value}
     elif ID=="9":
+        
         result=match_daoluyunshujingyingzigezheg(pos,value)
-        return {"上传类型":get_paper_name(ID),"信息":"返回成功","检测日期":current_time,"检测结果":result,"所有检测结果":''.join(value)}
+        
+        return {"上传类型":get_paper_name(ID),"检测日期":current_time,"检测结果":result,"所有检测结果":value}
     elif ID=="10":
+        
         result=match_yingyezhizhao(pos,value)
-        return {"上传类型":get_paper_name(ID),"信息":"返回成功","检测日期":current_time,"检测结果":result,"所有检测结果":''.join(value)}
+        
+        return {"上传类型":get_paper_name(ID),"检测日期":current_time,"检测结果":result,"所有检测结果":value}
     elif ID=="11":
+        
         result=match_congyezigezheng(pos,value)
-        return {"上传类型":get_paper_name(ID),"信息":"返回成功","检测日期":current_time,"检测结果":result,"所有检测结果":''.join(value)}
+        
+        return {"上传类型":get_paper_name(ID),"检测日期":current_time,"检测结果":result,"所有检测结果":value}
     elif ID=="12":
+        
         result=match_daoluyunshu(pos,value)
-        return {"上传类型":get_paper_name(ID),"信息":"返回成功","检测日期":current_time,"检测结果":result,"所有检测结果":''.join(value)}
+        
+        return {"上传类型":get_paper_name(ID),"检测日期":current_time,"检测结果":result,"所有检测结果":value}
     elif ID=="13":
+        
         result=match_xiahuozhi(pos,value)
-        return {"上传类型":get_paper_name(ID),"信息":"返回成功","检测日期":current_time,"检测结果":result,"所有检测结果":''.join(value)}
+        
+        return {"上传类型":get_paper_name(ID),"检测日期":current_time,"检测结果":result,"所有检测结果":value}
     elif ID=="14":
+        
         result=match_guobangdan(pos,value)
-        return {"上传类型":get_paper_name(ID),"信息":"返回成功","检测日期":current_time,"检测结果":result,"所有检测结果":''.join(value)}
+        
+        return {"上传类型":get_paper_name(ID),"检测日期":current_time,"检测结果":result,"所有检测结果":value}
     elif ID=="15":
+        
         result=match_jizhuangxiang(pos,value)
-        return {"上传类型":get_paper_name(ID),"信息":"返回成功","检测日期":current_time,"检测结果":result,"所有检测结果":''.join(value)}
+        
+        return {"上传类型":get_paper_name(ID),"检测日期":current_time,"检测结果":result,"所有检测结果":value}
     else:
-        return {"上传类型":get_paper_name(ID),"信息":"返回成功","检测日期":current_time,"检测结果":''.join(value)} 
+        return {"上传类型":get_paper_name(ID),"检测日期":current_time,"检测结果":value} 
 #-------------------------------------------------which paper-------------------------------------
